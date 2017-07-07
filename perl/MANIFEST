@@ -1,0 +1,8 @@
+../assets/sample.mpp
+../assets/sample.mmpz
+inc/ppport.h
+scripts/parse_lmms.pl
+lib/LMMS/Parser.xs
+lib/LMMS/Parser.pm
+lib/LMMS/Parser.bs
+lib/LMMS.pm

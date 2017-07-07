@@ -1,1 +1,0 @@
-char* decompress (char* contents);

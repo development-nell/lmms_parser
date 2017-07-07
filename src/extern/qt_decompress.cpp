@@ -20,9 +20,14 @@
 #include <iostream>
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QIODevice>
 #include "qt_decompress.h"
+#include "MidiFile.h"
+
+
+MidiFile midi;
 
 char* decompress(char* filename) {
 
@@ -30,12 +35,44 @@ char* decompress(char* filename) {
 	file.open(QIODevice::ReadOnly);
 	QByteArray bytes(file.readAll());
 	file.close();
-	
 
-	printf("Length: %d\n",bytes.size());
-	printf("First 2: %s\n",bytes.mid(0,2).data());
 	if (bytes.size()<1) {
 		return NULL;
 	}
-	return qUncompress(bytes).data();
+
+	QByteArray decompressed = qUncompress(bytes);
+	QString output(decompressed);
+	char* op = new char[output.size()+1];
+	strcpy(op,output.toStdString().data());
+	return op;
 }
+
+void newMidi(int tracks,int ticks,int tempo) {
+
+	midi = MidiFile();
+	midi.absoluteTicks();
+	midi.addTrack(tracks);
+	midi.setTicksPerQuarterNote(ticks);
+}
+
+void note(int track,int key,int velocity,int offset,int duration) {
+
+	std::vector<uchar> note_on {(uchar)MIDI_NOTE_ON,(uchar)key,(uchar)velocity};
+	midi.addEvent(track,offset,note_on);
+	std::vector<uchar> note_off {(uchar)MIDI_NOTE_OFF,(uchar)key,0};
+	midi.addEvent(track,offset+duration,note_off);
+
+}
+
+void saveMidi(char* filename) {
+	
+	midi.sortTracks();
+	midi.write(filename);
+}
+
+
+
+
+	
+
+	
