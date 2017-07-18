@@ -7,6 +7,7 @@ extern "C" {
 
 #include "qt_decompress.h"
 
+
 MODULE = LMMS::Parser PACKAGE = LMMS::Parser
 PROTOTYPES: DISABLE
 
